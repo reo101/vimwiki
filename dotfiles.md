@@ -14,6 +14,8 @@ exec zsh # to refresh the aliases
 dfr config --local status.showUntrackedFiles no
 ```
 - You can now start backing up dotfiles (remember to use `dfr` instead of `git`)
+
+### Adding normal files
 ```bash
 dfr add .config/nvim/init.vim
 dfr commit -m "Add nvim config"
@@ -21,15 +23,20 @@ dfr add .zsh*
 dfr commit -m "Add zsh config"
 dfr push
 ```
+### Adding submodules
+```bash
+dfr submodule add git@github.com:reo101/vimwiki.git vimwiki
+```
 ## How to restore your dotfiles with git
 - Prior to cloning the repo define the alias in the current shell scope (terminal) and add the dotfiles folder to the global `.gitignore` (to prevent weird recursion when cloning)
 ```bash
 alias dfr='/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME'
 echo "dotfiles" >> .gitignore
 ```
-- It's now time to clone the actual repo
+- It's now time to clone the actual repo (be sure to set up [ssh](ssh) keys beforehand)
 ```bash
 git clone --bare git@github.com:reo101/dotfiles.git $HOME/dotfiles
+dfr submodule update --init --recursive
 ```
 - We can now try to `checkout` the dotfiles from the repo
 ```bash
