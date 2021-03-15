@@ -1,5 +1,6 @@
 = Linux =
     * [[dotfiles]] -- Guide to setting up a dotfiles repo
+    * [ssh](ssh) - Guide to setting up ssh
     * [[nvim]] -- Guide to setting up nvim on a new machine.
     * [Termux](Termux)
 
