@@ -23,6 +23,12 @@ dfr add .zsh*
 dfr commit -m "Add zsh config"
 dfr push
 ```
+- ***IMPORTANT NOTE*** On your first push from fresh clone use
+```bash
+dfr push -u origin master
+```
+* This is needed because we're working with a bare repo and you have to explicitly say what branch to track (local to track remote)
+* After that you can just use `dfr push` to push
 ### Adding submodules
 ```bash
 dfr submodule add git@github.com:reo101/vimwiki.git vimwiki
@@ -50,17 +56,23 @@ error: The following untracked working tree files would be overwritten by checko
 Please move or remove them before you can switch branches.
 Aborting
 ```
-- This is because we might already haves the same dotfiles in our `$HOME` directory. We can easily back the current ones so we can safely `checkout` the new ones
+- This is because we might already haves the same dotfiles in our `$HOME` directory. We can easily backup the current ones so we can safely `checkout` without overriding anything ( **note** - you way need to run this a few times because the `checkout` commnd truncates the list of conflicting items at one point )
 ```bash
-mkdir -p .old-dotfiles && \ # makes directory for the backup
+mkdir .old-dotfiles &&  \ # makes directory for the backup
 dfr checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | \ # grabs all files from the error message
-xargs -I{} mv {} .old-dotfiles/{} # moves those files in the backup directory
+xargs -I{} sh -c 'path={} && \
+mkdir -p .old-dotfiles/${path%/*} && \
+mv {} .old-dotfiles/{}' # creates necessary subfolders and copies old dotfiles over
 ```
-- We can now retry to `checkout`
+- We can now retry to `checkout` and update submodules
 ```bash
 dfr checkout
+dfr submodule update --init --recursive
 ```
 - And finally hide untracked files again
 ```bash
 dfr config --local status.showUntrackedFiles no
 ```
+- P.S. You can update all submodules to their own master by running
+```bash
+dfr submodule update --remote --merge
