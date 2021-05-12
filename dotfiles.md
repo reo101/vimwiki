@@ -76,3 +76,4 @@ dfr config --local status.showUntrackedFiles no
 - P.S. You can update all submodules to their own master by running
 ```bash
 dfr submodule update --remote --merge
+```
